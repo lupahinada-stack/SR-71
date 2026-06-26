@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SR-71 · Справка специалиста</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@font-face {
+  font-family: ONY-FORM;
+  font-weight: 400;
+  src: url('//cdn.profi.ru/uikit/fonts/ONY_FORM/ONY-Form-New-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: ONY-FORM;
+  font-weight: 500;
+  src: url('//cdn.profi.ru/uikit/fonts/ONY_FORM/ONY-Form-New-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+:root {
+  --red: #fa2a48;
+  --red-bg: #ffedf0;
+  --yellow: #ffad0b;
+  --yellow-text: #ed8a00;
+  --yellow-bg: #fff5e4;
+  --green: #1bb577;
+  --green-text: #12a469;
+  --green-bg: #d6faeb;
+  --blue: #617ef8;
+  --blue-bg: #e6ebff;
+  --purple: #a947d7;
+  --purple-bg: #f7e5ff;
+  --ink: #181818;
+  --ink2: #838398;
+  --ink3: #a9a9c1;
+  --border: #e8e8f4;
+  --bg: #ffffff;
+  --bg2: #f4f5fb;
+  --display: ONY-FORM, system-ui, -apple-system, sans-serif;
+  --body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --r-s: 12px;
+  --r-m: 16px;
+  --r-l: 20px;
+  --r-xl: 24px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 40px;
+  height: 56px;
+}
+.nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--ink);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+}
+.nav__badge {
+  font-size: 12px;
+  color: var(--ink2);
+  background: var(--bg2);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+.nav__sections {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.nav__section-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink2);
+  font-family: var(--body);
+  transition: background .15s, color .15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav__section-btn:hover { background: var(--bg2); color: var(--ink); }
+.nav__section-btn.active { background: var(--bg2); color: var(--ink); font-weight: 600; }
+.nav__section-btn.active .nav__section-pip { background: var(--red); }
+.nav__section-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+  transition: background .2s;
+}
+.nav__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--red);
+  transition: width .1s linear;
+  width: 0%;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 40px 64px;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.hero__eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 16px;
+}
+.hero__title {
+  font-family: var(--display);
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.hero__title em {
+  font-style: normal;
+  color: var(--red);
+}
+.hero__sub {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink2);
+  max-width: 480px;
+  margin-bottom: 32px;
+}
+.hero__meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.hero__meta-item {
+  font-size: 13px;
+  color: var(--ink3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero__meta-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.hero__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.stat-card {
+  background: var(--bg2);
+  border-radius: var(--r-l);
+  padding: 24px;
+}
+.stat-card--accent { background: var(--red); }
+.stat-card--accent .stat-card__num { color: #fff; }
+.stat-card--accent .stat-card__label { color: rgba(255,255,255,0.7); }
+.stat-card__num {
+  font-family: var(--display);
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.stat-card__label {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink2);
+}
+
+/* ── LAYOUT ── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-top: 64px;
+  border-top: 1px solid var(--border);
+}
+.section-header__num {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--red);
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+.section-header__title {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--ink);
+}
+
+/* ── CALLOUT (главный инсайт наверху секции) ── */
+.callout {
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--r-xl);
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.callout__icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+.callout__text { font-size: 17px; line-height: 1.6; }
+.callout__text strong { color: var(--yellow); }
+
+/* ── GRID 2 cols ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.card--filled { background: var(--bg2); border-color: transparent; }
+.card__label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ink2);
+}
+.card__title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.card__note {
+  font-size: 13px;
+  color: var(--ink3);
+  margin-top: auto;
+}
+
+/* ── CHART WRAPPERS ── */
+.chart-wrap { position: relative; width: 100%; }
+.chart-wrap--short { height: 200px; }
+.chart-wrap--medium { height: 280px; }
+.chart-wrap--tall { height: 340px; }
+
+/* ── FUNNEL ── */
+.funnel {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  margin-bottom: 32px;
+}
+.funnel-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.funnel-step__bar {
+  background: var(--bg2);
+  border-radius: var(--r-m);
+  padding: 20px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 12px;
+  flex: 1;
+}
+.funnel-step:last-child .funnel-step__bar { margin-right: 0; background: var(--red-bg); }
+.funnel-step__n {
+  font-family: var(--display);
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+}
+.funnel-step:last-child .funnel-step__n { color: var(--red); }
+.funnel-step__label { font-size: 13px; line-height: 1.4; color: var(--ink2); }
+.funnel-step__pct {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-top: auto;
+}
+.funnel-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 0 16px;
+  color: var(--ink3);
+  font-size: 18px;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* ── ACTION BOX ── */
+.action-box {
+  border-radius: var(--r-m);
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.action-box--blue { background: var(--blue-bg); }
+.action-box--yellow { background: var(--yellow-bg); }
+.action-box--green { background: var(--green-bg); }
+.action-box--red { background: var(--red-bg); }
+.action-box__icon { font-size: 20px; flex-shrink: 0; }
+.action-box__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.action-box--blue .action-box__label { color: var(--blue); }
+.action-box--yellow .action-box__label { color: var(--yellow-text); }
+.action-box--green .action-box__label { color: var(--green-text); }
+.action-box--red .action-box__label { color: var(--red); }
+.action-box__text { font-size: 15px; line-height: 1.5; color: var(--ink); }
+
+/* ── AWARENESS PILLS ── */
+.awareness-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.awareness-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--r-m);
+  padding: 16px 20px;
+}
+.awareness-pill--red { background: var(--red-bg); }
+.awareness-pill--yellow { background: var(--yellow-bg); }
+.awareness-pill--green { background: var(--green-bg); }
+.awareness-pill__label { font-size: 15px; font-weight: 500; color: var(--ink); }
+.awareness-pill__num {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1;
+}
+.awareness-pill--red .awareness-pill__num { color: var(--red); }
+.awareness-pill--yellow .awareness-pill__num { color: var(--yellow-text); }
+.awareness-pill--green .awareness-pill__num { color: var(--green-text); }
+.awareness-pill__sub { font-size: 12px; color: var(--ink3); text-align: right; }
+
+/* ── HYPOTHESIS TABLE ── */
+.hyp-list { display: flex; flex-direction: column; gap: 10px; }
+.hyp-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: var(--r-m);
+  background: var(--bg2);
+}
+.hyp-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.hyp-tag--confirm { background: var(--green-bg); color: var(--green-text); }
+.hyp-tag--partial { background: var(--yellow-bg); color: var(--yellow-text); }
+.hyp-tag--refute { background: var(--red-bg); color: var(--red); }
+.hyp-text { font-size: 15px; line-height: 1.5; color: var(--ink); }
+
+/* ── PRIORITY GRID ── */
+.priority-card {
+  border-radius: var(--r-l);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.priority-card--red { background: var(--red-bg); }
+.priority-card--yellow { background: var(--yellow-bg); }
+.priority-card--green { background: var(--green-bg); }
+.priority-card__badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.priority-card--red .priority-card__badge { color: var(--red); }
+.priority-card--yellow .priority-card__badge { color: var(--yellow-text); }
+.priority-card--green .priority-card__badge { color: var(--green-text); }
+.priority-card__title {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.priority-card__text { font-size: 14px; line-height: 1.5; color: var(--ink2); }
+
+/* ── SEGMENT CARDS ── */
+.segment-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.seg-card {
+  background: var(--bg2);
+  border-radius: var(--r-l);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.seg-card__head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.seg-card__emoji { font-size: 28px; }
+.seg-card__name { font-family: var(--display); font-size: 20px; font-weight: 500; }
+.seg-stat { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.seg-stat:last-of-type { border-bottom: none; }
+.seg-stat__label { font-size: 14px; color: var(--ink2); }
+.seg-stat__val { font-size: 16px; font-weight: 700; }
+
+/* ── FOOTER ── */
+.footer {
+  margin-top: 80px;
+  border-top: 1px solid var(--border);
+  padding: 32px 40px;
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--ink3);
+}
+
+/* ── SPACING ── */
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mb-24 { margin-bottom: 24px; }
+.pb-80 { padding-bottom: 80px; }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <a class="nav__logo" href="#">
+    <span class="nav__dot"></span>
+    Профи.ру Исследования
+  </a>
+  <span class="nav__badge">SR-71</span>
+  <div class="nav__sections">
+    <a class="nav__section-btn" data-target="context" href="#context"><span class="nav__section-pip"></span>Контекст</a>
+    <a class="nav__section-btn" data-target="demand" href="#demand"><span class="nav__section-pip"></span>Воронка</a>
+    <a class="nav__section-btn" data-target="awareness" href="#awareness"><span class="nav__section-pip"></span>Осведомлённость</a>
+    <a class="nav__section-btn" data-target="segments" href="#segments"><span class="nav__section-pip"></span>Сегменты</a>
+    <a class="nav__section-btn" data-target="hypotheses" href="#hypotheses"><span class="nav__section-pip"></span>Гипотезы</a>
+    <a class="nav__section-btn" data-target="priorities" href="#priorities"><span class="nav__section-pip"></span>Приоритеты</a>
+  </div>
+  <div class="nav__progress" id="navProgress"></div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="hero__eyebrow">Количественное исследование · Июнь 2026</div>
+    <h1 class="hero__title">Как специалисты пользуются <em>справкой</em></h1>
+    <p class="hero__sub">862 специалиста. Опрос о том, знают ли они о справке, как решают вопросы и что мешает находить ответы самостоятельно.</p>
+    <div class="hero__meta">
+      <span class="hero__meta-item">862 участника</span>
+      <span class="hero__meta-dot"></span>
+      <span class="hero__meta-item">392 с реальными вопросами</span>
+      <span class="hero__meta-dot"></span>
+      <span class="hero__meta-item">6 сегментов по опытности</span>
+    </div>
+  </div>
+  <div class="hero__stats">
+    <div class="stat-card stat-card--accent">
+      <div class="stat-card__num">43%</div>
+      <div class="stat-card__label">не знают о существовании справки</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__num">61%</div>
+      <div class="stat-card__label">первым делом идут в поддержку</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__num">7%</div>
+      <div class="stat-card__label">ищут ответ в справке при вопросе</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__num">34%</div>
+      <div class="stat-card__label">справка помогает без поддержки <span style="display:block; font-size:11px; margin-top:4px; color:var(--ink3);">среди тех, кто ею пользуется, N=96</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     РАЗДЕЛ 0: КОНТЕКСТ
+     ════════════════════════════════════════════ -->
+<div class="page pb-80" id="context">
+
+  <div class="section-header reveal">
+    <span class="section-header__num">00</span>
+    <h2 class="section-header__title">Контекст исследования</h2>
+  </div>
+
+  <div class="grid-2 reveal" style="margin-bottom:16px;">
+    <div class="card card--filled" style="gap:20px;">
+      <div class="card__label">Что такое справка специалиста</div>
+      <div style="font-size:15px; line-height:1.6; color:var(--ink);">
+        Справка специалиста — раздел с ответами на вопросы о работе на платформе. Что-то вроде вики: статьи об откликах, списаниях, тарифах, рейтинге и других аспектах работы. Сейчас находится на <strong>стороннем сервисе</strong> — не внутри экосистемы Профи.
+      </div>
+      <div class="action-box action-box--yellow">
+        <span class="action-box__icon">🔧</span>
+        <div>
+          <div class="action-box__label">Решение уже принято</div>
+          <div class="action-box__text">Справку переносят на собственный сервис. Исследование помогает понять, какие проблемы решать при переносе, чтобы не воспроизвести их в новой версии.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card card--filled" style="gap:20px;">
+      <div class="card__label">Бизнес-задачи исследования</div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <div style="width:24px; height:24px; border-radius:50%; background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px;">1</div>
+          <div style="font-size:15px; line-height:1.5; color:var(--ink);">Работа с обращениями: самостоятельное решение проблем и освоение сервиса</div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <div style="width:24px; height:24px; border-radius:50%; background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px;">2</div>
+          <div style="font-size:15px; line-height:1.5; color:var(--ink);">Увеличение удовлетворённости: быстрое нахождение нужной информации</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3 reveal" style="margin-bottom:16px;">
+    <div class="card card--filled">
+      <div class="card__label">Ключевые вопросы</div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+        <div style="font-size:14px; color:var(--ink); padding-left:14px; position:relative;"><span style="position:absolute;left:0;color:var(--red)">·</span>Знают ли спецы о существовании справки?</div>
+        <div style="font-size:14px; color:var(--ink); padding-left:14px; position:relative;"><span style="position:absolute;left:0;color:var(--red)">·</span>В каких случаях обращаются?</div>
+        <div style="font-size:14px; color:var(--ink); padding-left:14px; position:relative;"><span style="position:absolute;left:0;color:var(--red)">·</span>Как находят справку?</div>
+        <div style="font-size:14px; color:var(--ink); padding-left:14px; position:relative;"><span style="position:absolute;left:0;color:var(--red)">·</span>Помогает ли она решить вопрос?</div>
+        <div style="font-size:14px; color:var(--ink); padding-left:14px; position:relative;"><span style="position:absolute;left:0;color:var(--red)">·</span>Удобно ли искать — находят ли ответы?</div>
+      </div>
+    </div>
+    <div class="card card--filled">
+      <div class="card__label">Выборка</div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+        <div style="display:flex; justify-content:space-between; padding: 6px 0; border-bottom:1px solid var(--border);">
+          <span style="font-size:14px; color:var(--ink2);">Всего участников</span>
+          <span style="font-size:15px; font-weight:700; color:var(--ink);">862</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding: 6px 0; border-bottom:1px solid var(--border);">
+          <span style="font-size:14px; color:var(--ink2);">С вопросами/сложностями</span>
+          <span style="font-size:15px; font-weight:700; color:var(--red);">392</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding: 6px 0; border-bottom:1px solid var(--border);">
+          <span style="font-size:14px; color:var(--ink2);">Без вопросов</span>
+          <span style="font-size:15px; font-weight:700; color:var(--ink);">470</span>
+        </div>
+        <div style="font-size:13px; color:var(--ink3); margin-top:4px; line-height:1.4;">Анализ строится на 392 спецах с реальными вопросами</div>
+      </div>
+    </div>
+    <div class="card card--filled">
+      <div class="card__label">Сегменты опыта (nzn)</div>
+      <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--ink2);">xxs · 0 назначений</span>
+          <span style="font-size:13px; font-weight:600; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:2px 8px;">59</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--ink2);">xs · 1–3 назначения</span>
+          <span style="font-size:13px; font-weight:600; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:2px 8px;">96</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--ink2);">s · 4–10 назначений</span>
+          <span style="font-size:13px; font-weight:600; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:2px 8px;">94</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--ink2);">m · 11–25 назначений</span>
+          <span style="font-size:13px; font-weight:600; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:2px 8px;">69</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--ink2);">l · 26–100 назначений</span>
+          <span style="font-size:13px; font-weight:600; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:2px 8px;">60</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; color:var(--ink2);">xl · 100+ назначений</span>
+          <span style="font-size:13px; font-weight:600; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:2px 8px;">14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Гипотезы брифа -->
+  <div class="card reveal" style="gap:16px;">
+    <div class="card__label">Гипотезы, которые проверялись</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div style="font-size:14px; color:var(--ink); padding:12px 14px; background:var(--bg2); border-radius:var(--r-m); line-height:1.5;">
+        Не все специалисты знают, что есть отдельный раздел со справочной информацией
+      </div>
+      <div style="font-size:14px; color:var(--ink); padding:12px 14px; background:var(--bg2); border-radius:var(--r-m); line-height:1.5;">
+        Специалисты не знают, как попасть в справку
+      </div>
+      <div style="font-size:14px; color:var(--ink); padding:12px 14px; background:var(--bg2); border-radius:var(--r-m); line-height:1.5;">
+        Специалисты приходят в поддержку после обращения в справку
+      </div>
+      <div style="font-size:14px; color:var(--ink); padding:12px 14px; background:var(--bg2); border-radius:var(--r-m); line-height:1.5;">
+        Справочная информация не всегда отвечает запросам спецов
+      </div>
+      <div style="font-size:14px; color:var(--ink); padding:12px 14px; background:var(--bg2); border-radius:var(--r-m); line-height:1.5;">
+        Специалистам неудобно пользоваться справкой — поиск нужных статей идёт только через поиск
+      </div>
+      <div style="font-size:14px; color:var(--ink); padding:12px 14px; background:var(--bg2); border-radius:var(--r-m); line-height:1.5;">
+        Специалисты приходят в справку после обращения в поддержку
+      </div>
+    </div>
+    <div style="font-size:13px; color:var(--ink3);">Вердикт по каждой гипотезе — в разделе «Гипотезы»</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     РАЗДЕЛ 1: ВОРОНКА
+     ════════════════════════════════════════════ -->
+<div class="page pb-80" id="demand">
+
+  <div class="section-header reveal">
+    <span class="section-header__num">01</span>
+    <h2 class="section-header__title">Воронка: от вопроса до решения через справку</h2>
+  </div>
+
+  <div class="callout reveal">
+    <span class="callout__icon">⚠️</span>
+    <div class="callout__text">
+      Из каждых 100 специалистов с вопросами о платформе <strong>только ~8 решают их через справку самостоятельно</strong>. Остальные 92 идут в поддержку или остаются с нерешённым вопросом. Справка не выполняет функцию самообслуживания. <span style="font-size:13px; opacity:0.6;">(база: N=392, спецы с реальными вопросами)</span>
+    </div>
+  </div>
+
+  <div class="funnel reveal mb-24">
+    <div class="funnel-step">
+      <div class="funnel-step__bar">
+        <div class="funnel-step__n">862</div>
+        <div class="funnel-step__label">всего участников опроса</div>
+        <div class="funnel-step__pct">100%</div>
+      </div>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step">
+      <div class="funnel-step__bar">
+        <div class="funnel-step__n">392</div>
+        <div class="funnel-step__label">были вопросы или сложности</div>
+        <div class="funnel-step__pct">46% от всех</div>
+      </div>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step">
+      <div class="funnel-step__bar">
+        <div class="funnel-step__n">223</div>
+        <div class="funnel-step__label">знают о справке</div>
+        <div class="funnel-step__pct">57% из тех, кто с вопросами</div>
+      </div>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step">
+      <div class="funnel-step__bar">
+        <div class="funnel-step__n">96</div>
+        <div class="funnel-step__label">знают и пользуются</div>
+        <div class="funnel-step__pct">24% из тех, кто с вопросами</div>
+      </div>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step">
+      <div class="funnel-step__bar">
+        <div class="funnel-step__n">~32</div>
+        <div class="funnel-step__label">решают без поддержки</div>
+        <div class="funnel-step__pct">8% — финальная конверсия</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2 reveal">
+    <div class="card">
+      <div class="card__label">Каналы решения вопросов</div>
+      <div class="card__title">Поддержка — инстинкт по умолчанию</div>
+      <div class="chart-wrap chart-wrap--tall"><canvas id="cQ3"></canvas></div>
+      <div class="card__note">N=392, мультивыбор. Справка в 9× уступает поддержке.</div>
+    </div>
+    <div class="card">
+      <div class="card__label">Темы вопросов и сложностей</div>
+      <div class="card__title">Три темы — больше половины всех обращений</div>
+      <div class="chart-wrap chart-wrap--tall"><canvas id="cQ2"></canvas></div>
+      <div class="card__note">N=392, мультивыбор. Отклики, комиссия и списания — приоритет контента.</div>
+    </div>
+  </div>
+
+  <div class="action-box action-box--blue mt-24 reveal">
+    <span class="action-box__icon">💡</span>
+    <div>
+      <div class="action-box__label">Что можно сделать</div>
+      <div class="action-box__text">Встроить точку входа в справку прямо в личный кабинет — рядом с разделами «Отклики», «Финансы» и «Настройки тарифа». ИИ-ассистент должен появляться как перехватчик в момент, когда специалист открывает чат с поддержкой.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     РАЗДЕЛ 2: ОСВЕДОМЛЁННОСТЬ
+     ════════════════════════════════════════════ -->
+<div class="page pb-80" id="awareness">
+
+  <div class="section-header reveal">
+    <span class="section-header__num">02</span>
+    <h2 class="section-header__title">Осведомлённость и барьеры использования</h2>
+  </div>
+
+  <div class="grid-2 reveal mb-24">
+    <div>
+      <div class="card__label mb-24" style="font-size:13px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:var(--ink2);">Знание о справке · N=392</div>
+      <div class="awareness-stack">
+        <div class="awareness-pill awareness-pill--red">
+          <div>
+            <div class="awareness-pill__label">Не знают о справке</div>
+            <div style="font-size:13px; color:var(--ink3); margin-top:2px;">169 специалистов</div>
+          </div>
+          <div>
+            <div class="awareness-pill__num">43%</div>
+            <div class="awareness-pill__sub">от N=392</div>
+          </div>
+        </div>
+        <div class="awareness-pill awareness-pill--yellow">
+          <div>
+            <div class="awareness-pill__label">Знают, но не пользуются</div>
+            <div style="font-size:13px; color:var(--ink3); margin-top:2px;">127 специалистов</div>
+          </div>
+          <div>
+            <div class="awareness-pill__num">32%</div>
+            <div class="awareness-pill__sub">от N=392</div>
+          </div>
+        </div>
+        <div class="awareness-pill awareness-pill--green">
+          <div>
+            <div class="awareness-pill__label">Знают и пользуются</div>
+            <div style="font-size:13px; color:var(--ink3); margin-top:2px;">96 специалистов</div>
+          </div>
+          <div>
+            <div class="awareness-pill__num">24%</div>
+            <div class="awareness-pill__sub">от N=392</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__label">Почему не пользуются справкой</div>
+      <div class="card__title">Проблема в ценности, не в кнопке</div>
+      <div class="chart-wrap chart-wrap--medium"><canvas id="cQ5"></canvas></div>
+      <div class="card__note">N=296 (знают о справке, но не пользуются)</div>
+    </div>
+  </div>
+
+  <div class="grid-2 reveal">
+    <div class="card">
+      <div class="card__label">Опыт поиска у пользователей справки</div>
+      <div class="card__title">73% тратят время или не находят</div>
+      <div class="chart-wrap chart-wrap--short"><canvas id="cQ6"></canvas></div>
+      <div class="card__note">N=96, только реальные пользователи справки</div>
+    </div>
+    <div class="card">
+      <div class="card__label">Что мешает быстро найти ответ</div>
+      <div class="card__title">Навигация и контент — два главных барьера</div>
+      <div class="chart-wrap chart-wrap--short"><canvas id="cQ7"></canvas></div>
+      <div class="card__note">N=96, мультивыбор</div>
+    </div>
+  </div>
+
+  <div class="card card--filled mt-24 reveal">
+    <div class="card__label">Оценки справки пользователями · N=96</div>
+    <div class="card__title">Форму хвалят, функцию — проваливают</div>
+    <div class="chart-wrap chart-wrap--tall"><canvas id="cMatrix"></canvas></div>
+    <div class="card__note">Зелёный — «работает», красный — «болит». Согласны / не согласны с утверждением.</div>
+  </div>
+
+  <div class="action-box action-box--yellow mt-24 reveal">
+    <span class="action-box__icon">💡</span>
+    <div>
+      <div class="action-box__label">Ключевой вывод</div>
+      <div class="action-box__text">Язык и базовое покрытие — хорошие (63% довольны). Но только 34% говорят, что справка помогает решить вопрос без поддержки. Барьер — контентный, не дизайнерский: не хватает ответов на реальные кейсы (возвраты, споры, сложные тарифы).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     РАЗДЕЛ 3: СЕГМЕНТЫ
+     ════════════════════════════════════════════ -->
+<div class="page pb-80" id="segments">
+
+  <div class="section-header reveal">
+    <span class="section-header__num">03</span>
+    <h2 class="section-header__title">Срез по сегментам: опытность и активность</h2>
+  </div>
+
+  <div class="callout reveal">
+    <span class="callout__icon">📈</span>
+    <div class="callout__text">
+      Чем опытнее специалист — тем больше у него вопросов, и тем сильнее он зависит от поддержки. <strong>У новичков (0–3 назначения) о справке не знают 50–54% — самая острая точка.</strong> Опытные её находят лучше, но всё равно параллельно идут в поддержку. <span style="font-size:13px; opacity:0.6;">(база: N=392, спецы с реальными вопросами)</span>
+    </div>
+  </div>
+
+  <div class="card mb-24 reveal">
+    <div class="card__label">Осведомлённость по уровню опытности</div>
+    <div class="card__title">Новички — главная слепая зона</div>
+    <div class="chart-wrap chart-wrap--medium"><canvas id="cTagAware"></canvas></div>
+    <div class="card__note">По числу назначений (nzn). Чем меньше опыта — тем меньше знают о справке.</div>
+  </div>
+
+  <div class="segment-row reveal">
+    <div class="seg-card">
+      <div class="seg-card__head">
+        <span class="seg-card__emoji">🆕</span>
+        <span class="seg-card__name">Новички (0–3 назначения)</span>
+      </div>
+      <div class="seg-stat">
+        <span class="seg-stat__label">Не знают о справке</span>
+        <span class="seg-stat__val" style="color:var(--red)">50–54% <span style="font-size:11px; font-weight:400; color:var(--ink3);">N=59/96</span></span>
+      </div>
+      <div class="seg-stat">
+        <span class="seg-stat__label">Пользуются справкой</span>
+        <span class="seg-stat__val" style="color:var(--red)">15–19% <span style="font-size:11px; font-weight:400; color:var(--ink3);">N=59/96</span></span>
+      </div>
+      <div class="seg-stat">
+        <span class="seg-stat__label">Идут в поддержку</span>
+        <span class="seg-stat__val">~52% <span style="font-size:11px; font-weight:400; color:var(--ink3);">N=155</span></span>
+      </div>
+      <div class="action-box action-box--red" style="margin-top:4px;">
+        <span class="action-box__icon">⚡</span>
+        <div>
+          <div class="action-box__label">Острая точка</div>
+          <div class="action-box__text">Генерируют больше всего базовых вопросов — и меньше всего знают о справке.</div>
+        </div>
+      </div>
+    </div>
+    <div class="seg-card">
+      <div class="seg-card__head">
+        <span class="seg-card__emoji">📈</span>
+        <span class="seg-card__name">Опытные (26–100 назначений)</span>
+      </div>
+      <div class="seg-stat">
+        <span class="seg-stat__label">Не знают о справке</span>
+        <span class="seg-stat__val" style="color:var(--yellow-text)">28% <span style="font-size:11px; font-weight:400; color:var(--ink3);">N=60</span></span>
+      </div>
+      <div class="seg-stat">
+        <span class="seg-stat__label">Пользуются справкой</span>
+        <span class="seg-stat__val" style="color:var(--green-text)">38% <span style="font-size:11px; font-weight:400; color:var(--ink3);">N=60</span></span>
+      </div>
+      <div class="seg-stat">
+        <span class="seg-stat__label">Идут в поддержку</span>
+        <span class="seg-stat__val">~80% <span style="font-size:11px; font-weight:400; color:var(--ink3);">N=60</span></span>
+      </div>
+      <div class="action-box action-box--yellow" style="margin-top:4px;">
+        <span class="action-box__icon">🔄</span>
+        <div>
+          <div class="action-box__label">Парадокс</div>
+          <div class="action-box__text">Знают справку лучше, но чаще идут в поддержку — у них сложные нетиповые кейсы.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-box action-box--blue mt-24 reveal">
+    <span class="action-box__icon">💡</span>
+    <div>
+      <div class="action-box__label">Что можно сделать</div>
+      <div class="action-box__text">Онбординг в справку для новых специалистов на первых 3–5 назначениях — баннер или подсказка при первом возникновении вопроса. Ветеранов параллельно «дотаскивать» продвинутым контентом по нетиповым кейсам (возвраты, споры, тарифы).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     РАЗДЕЛ 4: ГИПОТЕЗЫ
+     ════════════════════════════════════════════ -->
+<div class="page pb-80" id="hypotheses">
+
+  <div class="section-header reveal">
+    <span class="section-header__num">04</span>
+    <h2 class="section-header__title">Вердикт по гипотезам брифа</h2>
+  </div>
+
+  <div class="hyp-list reveal">
+    <div class="hyp-row">
+      <span class="hyp-tag hyp-tag--confirm">✓ Подтверждена</span>
+      <span class="hyp-text"><strong>Не все спецы знают о справке</strong> — <b>43%</b> с реальными вопросами вообще не знают о её существовании <span style="font-size:12px; color:var(--ink3);">(169 из 392)</span>. У новичков — <b>50–54%</b> <span style="font-size:12px; color:var(--ink3);">(сегменты xxs/xs, N=59/96)</span>.</span>
+    </div>
+    <div class="hyp-row">
+      <span class="hyp-tag hyp-tag--partial">≈ Частично</span>
+      <span class="hyp-text"><strong>Специалисты не знают, как попасть в справку</strong> — для тех, кто знает, «тяжело найти» называют только <b>2%</b> <span style="font-size:12px; color:var(--ink3);">(из N=223, знающих о справке)</span>. Главный барьер — отсутствие нужного контента: <b>22%</b> говорят «быстрее в поддержку», <b>14%</b> — «нет ответов» <span style="font-size:12px; color:var(--ink3);">(N=296, знают, но не пользуются)</span>.</span>
+    </div>
+    <div class="hyp-row">
+      <span class="hyp-tag hyp-tag--confirm">✓ Подтверждена</span>
+      <span class="hyp-text"><strong>Спецы идут в поддержку и до, и после справки</strong> — <b>44%</b> пользователей справки признают, что всё равно идут в поддержку после неё, <b>62%</b> говорят «проще написать в поддержку» <span style="font-size:12px; color:var(--ink3);">(оба — N=96, пользователи справки)</span>.</span>
+    </div>
+    <div class="hyp-row">
+      <span class="hyp-tag hyp-tag--confirm">✓ Подтверждена</span>
+      <span class="hyp-text"><strong>Справка не всегда отвечает запросам</strong> — <b>35%</b> пользователей не находят ответ или находят неполный <span style="font-size:12px; color:var(--ink3);">(N=96)</span>. Не хватает примеров — <b>20%</b>, пошаговых инструкций — <b>21%</b> <span style="font-size:12px; color:var(--ink3);">(N=96, мультивыбор)</span>.</span>
+    </div>
+    <div class="hyp-row">
+      <span class="hyp-tag hyp-tag--partial">≈ Частично</span>
+      <span class="hyp-text"><strong>Ищут только через поиск</strong> — главная UX-боль другая: «непонятно, в каком разделе искать» — <b>28%</b> <span style="font-size:12px; color:var(--ink3);">(N=96, пользователи справки)</span>. Не поиск как инструмент, а навигация по разделам.</span>
+    </div>
+  </div>
+
+  <!-- Парадоксы -->
+  <div class="section-header reveal mt-32" style="padding-top: 40px; border-top: 1px solid var(--border);">
+    <span class="section-header__num">—</span>
+    <h2 class="section-header__title">Контринтуитивные находки</h2>
+  </div>
+
+  <div class="grid-3 reveal">
+    <div class="card card--filled">
+      <div style="font-size:28px">🤔</div>
+      <div class="card__title">«Тяжело найти» — не главная боль</div>
+      <div style="font-size:14px; line-height:1.5; color:var(--ink2)">Только <b>2%</b> тех, кто знает справку, называют её тяжело найти <span style="font-size:11px; color:var(--ink3);">(N=223, знают о справке)</span>. Но <b>43%</b> её вообще не ищут, потому что не знают о существовании <span style="font-size:11px; color:var(--ink3);">(N=392, с реальными вопросами)</span>. Это разные проблемы.</div>
+    </div>
+    <div class="card card--filled">
+      <div style="font-size:28px">🔄</div>
+      <div class="card__title">Ветераны хуже новичков среднего уровня</div>
+      <div style="font-size:14px; line-height:1.5; color:var(--ink2)">Спецы с 100+ назначениями — <b>43%</b> «не знают» справки <span style="font-size:11px; color:var(--ink3);">(N=14, xl-сегмент — мало, индикация)</span>. Хуже, чем у группы 26–100: там <b>28%</b> <span style="font-size:11px; color:var(--ink3);">(N=60)</span>. Вероятно, выработали устойчивый паттерн «писать в поддержку» и не меняют его.</div>
+    </div>
+    <div class="card card--filled">
+      <div style="font-size:28px">📖</div>
+      <div class="card__title">Контент нравится — а проблему не решает</div>
+      <div style="font-size:14px; line-height:1.5; color:var(--ink2)"><b>63%</b> хвалят понятный язык, <b>57%</b> — базовое покрытие <span style="font-size:11px; color:var(--ink3);">(N=96, пользователи справки)</span>. Но <b>62%</b> из них же говорят «проще в поддержку» <span style="font-size:11px; color:var(--ink3);">(N=96)</span>. Проблема не в качестве текстов, а в скорости и полноте ответа на нетиповой кейс.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     РАЗДЕЛ 5: ПРИОРИТЕТЫ
+     ════════════════════════════════════════════ -->
+<div class="page pb-80" id="priorities">
+
+  <div class="section-header reveal">
+    <span class="section-header__num">05</span>
+    <h2 class="section-header__title">Приоритеты при переносе справки</h2>
+  </div>
+
+  <div class="grid-3 reveal">
+    <div class="priority-card priority-card--red">
+      <div class="priority-card__badge">🔴 Высокий приоритет</div>
+      <div class="priority-card__title">Видимая точка входа</div>
+      <div class="priority-card__text">Разместить ссылку на справку в личном кабинете рядом с разделами «Отклики», «Финансы», «Тариф». Не в футере — в контексте вопроса.</div>
+    </div>
+    <div class="priority-card priority-card--red">
+      <div class="priority-card__badge">🔴 Высокий приоритет</div>
+      <div class="priority-card__title">Онбординг для новичков</div>
+      <div class="priority-card__text">На первых 3–5 назначениях — баннер или подсказка, открывающая справку при первом возникновении вопроса. 54% новичков о ней не знают.</div>
+    </div>
+    <div class="priority-card priority-card--red">
+      <div class="priority-card__badge">🔴 Высокий приоритет</div>
+      <div class="priority-card__title">Контент по топ-3 темам</div>
+      <div class="priority-card__text">Пошаговые инструкции с примерами: отклики и заказы (35%), тариф «Комиссия» (25%), списания за отклики (22%). Они закрывают большинство обращений.</div>
+    </div>
+
+    <div class="priority-card priority-card--yellow">
+      <div class="priority-card__badge">🟡 Средний приоритет</div>
+      <div class="priority-card__title">Переработать навигацию по разделам</div>
+      <div class="priority-card__text">28% пользователей справки не понимают, в каком разделе искать. Проблема в структуре, а не в поиске — нужно переименовать разделы под формулировки реальных задач спецов.</div>
+    </div>
+    <div class="priority-card priority-card--green">
+      <div class="priority-card__badge">🟢 Низкий приоритет</div>
+      <div class="priority-card__title">Связка справка → поддержка</div>
+      <div class="priority-card__text">В конце каждой статьи: «Это помогло?» с переходом в чат только при отказе. Единый флоу вместо конкуренции каналов.</div>
+    </div>
+  </div>
+
+  <!-- Что проверить -->
+  <div class="card mt-32 reveal">
+    <div class="card__label">Что стоит проверить дальше</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 4px;">
+      <div>
+        <div style="font-size:15px; font-weight:600; margin-bottom:8px;">Качественные интервью</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+          <li style="font-size:14px; color:var(--ink2); padding-left:16px; position:relative;"><span style="position:absolute; left:0; color:var(--red)">·</span>5–7 интервью с новичками (0–3 назначения) — что они делают при первом непонятном моменте</li>
+          <li style="font-size:14px; color:var(--ink2); padding-left:16px; position:relative;"><span style="position:absolute; left:0; color:var(--red)">·</span>Тест ИИ-ассистента — воспринимают ли его как полноценный ответ или хотят «живого» агента</li>
+          <li style="font-size:14px; color:var(--ink2); padding-left:16px; position:relative;"><span style="position:absolute; left:0; color:var(--red)">·</span>Глубинки с ветеранами — почему не меняют паттерн «всегда в поддержку» даже зная справку</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:15px; font-weight:600; margin-bottom:8px;">Ограничения данных</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+          <li style="font-size:14px; color:var(--ink2); padding-left:16px; position:relative;"><span style="position:absolute; left:0; color:var(--red)">·</span>470 спецов ответили «не было вопросов» — их поведение не изучалось</li>
+          <li style="font-size:14px; color:var(--ink2); padding-left:16px; position:relative;"><span style="position:absolute; left:0; color:var(--red)">·</span>Опрос не показывает, когда именно обращаются в справку — до поддержки или после</li>
+          <li style="font-size:14px; color:var(--ink2); padding-left:16px; position:relative;"><span style="position:absolute; left:0; color:var(--red)">·</span>N=96 у пользователей справки — предварительно, некоторые срезы ненадёжны</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div>SR-71 · Справка для специалистов · Профи.ру · Июнь 2026</div>
+  <div>N=862 · Количественный опрос</div>
+</footer>
+
+<script>
+// ── Chart.js defaults ──
+Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#838398';
+Chart.defaults.plugins.legend.display = false;
+
+const RED = '#fa2a48';
+const YELLOW = '#ffad0b';
+const GREEN = '#1bb577';
+const BLUE = '#617ef8';
+const PURPLE = '#a947d7';
+const GRAY = '#c9c9dd';
+const INK = '#181818';
+const BG2 = '#f4f5fb';
+
+// ── Q3: каналы ──
+new Chart(document.getElementById('cQ3'), {
+  type: 'bar',
+  data: {
+    labels: ['Пишу в поддержку','Разбираюсь сам','В приложении','На сайте','У коллег','В интернете','В справке','Чаты/форумы','ИИ'],
+    datasets: [{
+      data: [61, 30, 14.5, 11.7, 8.4, 5.9, 6.9, 4.8, 3.1],
+      backgroundColor: [RED, GRAY, GRAY, GRAY, GRAY, GRAY, GREEN, GRAY, GRAY],
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { tooltip: { callbacks: { label: c => c.raw + '%' } } },
+    scales: {
+      x: { ticks: { callback: v => v + '%' }, max: 75, grid: { color: '#f0f0f8' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── Q2: темы проблем ──
+new Chart(document.getElementById('cQ2'), {
+  type: 'bar',
+  data: {
+    labels: ['Отклики и заказы','Тариф «Комиссия»','Списания за отклики','Отзывы и рейтинг','Отмена заказов','Возврат денег','Что-то не работало','Споры по услугам'],
+    datasets: [{
+      data: [35.2, 24.7, 22.4, 18.9, 17.1, 12.8, 13.3, 12.0],
+      backgroundColor: [RED, RED, RED, BLUE, BLUE, BLUE, BLUE, BLUE],
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { tooltip: { callbacks: { label: c => c.raw + '%' } } },
+    scales: {
+      x: { ticks: { callback: v => v + '%' }, grid: { color: '#f0f0f8' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── Q5: почему не пользуются ──
+new Chart(document.getElementById('cQ5'), {
+  type: 'bar',
+  data: {
+    labels: ['Быстрее в поддержку','Нет ответов на вопросы','Мало полезного','Статьи длинные','Тяжело найти'],
+    datasets: [{
+      data: [22.3, 14.2, 12.2, 7.1, 2.0],
+      backgroundColor: [RED, RED, YELLOW, GRAY, GRAY],
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { tooltip: { callbacks: { label: c => c.raw + '%' } } },
+    scales: {
+      x: { ticks: { callback: v => v + '%' }, grid: { color: '#f0f0f8' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── Q6: опыт поиска ──
+new Chart(document.getElementById('cQ6'), {
+  type: 'bar',
+  data: {
+    labels: ['Трачу время — нахожу','Всегда легко','Нахожу неполный','Не нахожу'],
+    datasets: [{
+      data: [38, 27, 25, 10],
+      backgroundColor: [YELLOW, GREEN, YELLOW, RED],
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { tooltip: { callbacks: { label: c => c.raw + '%' } } },
+    scales: {
+      x: { ticks: { callback: v => v + '%' }, max: 50, grid: { color: '#f0f0f8' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── Q7: барьеры ──
+new Chart(document.getElementById('cQ7'), {
+  type: 'bar',
+  data: {
+    labels: ['Непонятно, где искать','Нет инструкций','Нет примеров','Много статей','Забываю, как войти','Поиск плохой'],
+    datasets: [{
+      data: [28.1, 20.8, 19.8, 16.7, 12.5, 6.2],
+      backgroundColor: [PURPLE, PURPLE, PURPLE, GRAY, GRAY, GRAY],
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { tooltip: { callbacks: { label: c => c.raw + '%' } } },
+    scales: {
+      x: { ticks: { callback: v => v + '%' }, max: 40, grid: { color: '#f0f0f8' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── Q8 Matrix: diverging ──
+new Chart(document.getElementById('cMatrix'), {
+  type: 'bar',
+  data: {
+    labels: [
+      'Понятный язык',
+      'Покрывает базовые вопросы',
+      'Чаще польз., если проще найти',
+      'После справки всё равно в поддержку',
+      'Помогает решить без поддержки',
+      'Проще написать в поддержку',
+    ],
+    datasets: [
+      { label: 'Согласны', data: [63, 57, 47, 44, 34, 62], backgroundColor: GREEN, borderRadius: 4 },
+      { label: 'Не согласны', data: [-15, -16, -15, -23, -27, -11], backgroundColor: RED, borderRadius: 4 }
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: true, position: 'top' },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': ' + Math.abs(c.raw) + '%' } }
+    },
+    scales: {
+      x: {
+        stacked: true,
+        ticks: { callback: v => Math.abs(v) + '%' },
+        grid: { color: '#f0f0f8' }
+      },
+      y: { stacked: true, grid: { display: false } }
+    }
+  }
+});
+
+// ── Awareness by nzn ──
+new Chart(document.getElementById('cTagAware'), {
+  type: 'bar',
+  data: {
+    labels: ['0 (xxs)','1–3 (xs)','4–10 (s)','11–25 (m)','26–100 (l)','100+ (xl)'],
+    datasets: [
+      { label: 'Не знают', data: [54, 50, 38, 43, 28, 43], backgroundColor: RED, borderRadius: 4 },
+      { label: 'Знают, не пользуются', data: [31, 31, 34, 32, 33, 36], backgroundColor: YELLOW, borderRadius: 4 },
+      { label: 'Пользуются', data: [15, 19, 28, 25, 38, 21], backgroundColor: GREEN, borderRadius: 4 },
+    ]
+  },
+  options: {
+    plugins: { legend: { display: true, position: 'top' }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw + '%' } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, title: { display: true, text: 'Число назначений (nzn)' } },
+      y: { stacked: true, ticks: { callback: v => v + '%' }, max: 100, grid: { color: '#f0f0f8' } }
+    }
+  }
+});
+
+// ── Scroll reveal ──
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── Nav: anchor offset compensation (sticky nav = 56px) ──
+document.querySelectorAll('.nav__section-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const id = this.getAttribute('href').replace('#','');
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 68;
+    window.scrollTo({ top, behavior: 'smooth' });
+  });
+});
+
+// ── Progress bar + active section ──
+const sections = ['context','demand','awareness','segments','hypotheses','priorities'];
+const progress = document.getElementById('navProgress');
+
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
+  if (progress) progress.style.width = (total > 0 ? (scrolled / total * 100) : 0) + '%';
+
+  let current = sections[0];
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 80) current = id;
+  }
+  document.querySelectorAll('.nav__section-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.target === current);
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
